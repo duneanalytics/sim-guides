@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SIM Wallet UI - A simple and elegant wallet interface for viewing crypto assets and transactions">
+    <meta name="theme-color" content="#0b0e1f">
+    
+    <title>SIM Wallet UI</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.css">
+
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- 1. Header -->
+        <header class="app-header">
+            <div class="profile-pic-placeholder"></div>
+            <div class="header-title">Wallet</div>
+            <div class="settings-icon"></div>
+        </header>
+
+        <!-- 2. Total Wallet Value -->
+        <section class="total-balance-section">
+            <p class="total-balance-amount"><%= totalWalletUSDValue %></p>
+            <p class="total-balance-label js-total-balance-amount"><%= walletAddress || 'Enter wallet address...' %></p>
+        </section>
+
+        <!-- 3. Tabs Navigation -->
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="tokens">Tokens</button>
+            <button class="tab-button" data-tab="activity">Activity</button>
+            <button class="tab-button" data-tab="collectibles">Collectibles</button>
+        </nav>
+
+        <!-- 4. Tab Content Area -->
+        <main class="tab-content">
+            <!-- Tokens Tab Pane -->
+            <div id="tokens" class="tab-pane active">
+                <% if (tokens && tokens.length > 0) { %>
+                    <% tokens.forEach(token => { %>
+                        <div class="list-item">
+                            <% if (token.tokenLogo) { %>
+                                <img src="<%= token.tokenLogo %>" alt="<%= token.symbol %>" class="item-icon-placeholder" style="object-fit: contain; padding: 6px;">
+                            <% } else { %>
+                                <div class="item-icon-placeholder"><%= token.symbol.substring(0, 4) %></div>
+                            <% } %>
+                            <div class="item-info">
+                                <% if (token.tokenUrl) { %>
+                                    <p class="item-name"><a href="<%= token.tokenUrl %>" target="_blank" style="color: inherit; text-decoration: none;"><%= token.name %></a></p>
+                                <% } else { %>
+                                    <p class="item-name"><%= token.name %></p>
+                                <% } %>
+                                <p class="item-sub-info"><span class="mono"><%= token.balanceFormatted %> <%= token.symbol %></span> on <%= token.chainName %></p>
+                            </div>
+                            <div class="item-value-right">
+                                <p class="item-usd-value"><%= token.usdValueFormatted %></p>
+                                <p class="item-sub-info">Price: <span class="mono"><%= token.priceUSDFormatted %></span></p>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">No tokens found for this wallet.</p>
+                <% } %>
+            </div>
+
+            <!-- Activity Tab Pane -->
+            <div id="activity" class="tab-pane">
+                <% if (activities && activities.length > 0) { %>
+                    <% activities.forEach(activity => { %>
+                        <div class="list-item">
+                            <div class="item-icon-placeholder">
+                                <%= activity.type === 'receive' ? '↓' : (activity.type === 'send' ? '↑' : '✓') %>
+                            </div>
+                            <div class="item-info">
+                                <% if (activity.type === 'call') { %>
+                                    <p class="item-name" style="color: var(--color-accent-purple);">Contract Call</p>
+                                <% } else { %>
+                                    <p class="activity-direction <%= activity.type %>">
+                                        <%= activity.directionLabel %> <span class="mono"><%= activity.assetSymbol %></span>
+                                    </p>
+                                <% } %>
+                                <p class="activity-address"><%= activity.partyLabel %>: <span class="mono"><%= activity.partyAddressShort %></span></p>
+                                <p class="activity-timestamp"><span class="mono"><%= activity.timestampFormatted %></span></p>
+                            </div>
+                            <div class="item-value-right">
+                                <% if (activity.type === 'call') { %>
+                                    <p class="activity-amount-right" style="font-family: var(--font-primary);">
+                                        <%= activity.directionLabel %>
+                                    </p>
+                                <% } else { %>
+                                    <p class="activity-amount-right <%= activity.type %>">
+                                        <%= activity.amountPrefix %><%= activity.amountFormatted %> <span class="mono"><%= activity.assetSymbol %></span>
+                                    </p>
+                                <% } %>
+                                <p class="item-sub-info"><span class="mono"><%= activity.usdValueFormattedAtTime %></span></p>
+                            </div>
+                        </div>
+                    <% }); %>
+                    
+                    <% if (nextActivityOffset) { %>
+                        <div style="text-align: center; padding: 20px;">
+                            <a href="?walletAddress=<%= walletAddress %>&tab=activity&activity_offset=<%= nextActivityOffset %>" 
+                               style="color: var(--color-accent-purple); text-decoration: none;">
+                                Load More
+                            </a>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">
+                        No activity found for this wallet.
+                    </p>
+                <% } %>
+            </div>
+
+            <!-- Collectibles Tab Pane -->
+            <div id="collectibles" class="tab-pane">
+                <p style="font-family: var(--font-primary); text-align: center; padding-top: 30px; color: var(--color-text-muted);">Collectibles feature coming soon!</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/main.js"></script>
+    
+</body>
+</html>
