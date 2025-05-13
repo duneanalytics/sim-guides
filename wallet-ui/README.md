@@ -4,6 +4,8 @@ A modern, accessible, and responsive wallet interface for viewing crypto assets 
 
 To read the full guide, visit [https://docs.sim.dune.com/evm/wallet-ui](https://docs.sim.dune.com/evm/wallet-ui).
 
+[sim Real-Time Wallet UI](images/ui.png)
+
 ## Features
 
 - 💰 View total wallet balance
