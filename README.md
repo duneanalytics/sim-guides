@@ -1,3 +1,3 @@
-# sim Guides
+# Sim Guides
 
 https://docs.sim.dune.com/
