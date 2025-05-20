@@ -1,24 +1,24 @@
-# sim Real-Time Wallet UI
+# Sim Realtime Wallet UI
 
-A modern, accessible, and responsive wallet interface for viewing crypto assets and transactions. This example demonstrates a simple integration with Dune's sim APIs to build a basic wallet user interface.
+A modern, accessible, and responsive wallet interface for viewing crypto assets and transactions. This example demonstrates a simple integration with Dune's Sim APIs to build a basic wallet user interface.
 
-To read the full guide, visit [https://docs.sim.dune.com/evm/wallet-ui](https://docs.sim.dune.com/evm/wallet-ui).
+To read the full guide, visit [https://docs.sim.dune.com/evm/build-a-realtime-wallet](https://docs.sim.dune.com/evm/build-a-realtime-wallet).
 
-![sim Real-Time Wallet UI](images/ui.png)
+![Sim Realtime Wallet UI](images/ui.png)
 
 ## Features
 
 - 💰 View total wallet balance
 - 🪙 List and track token balances
 - 📊 View transaction history
-- 🖼️ NFT/Collectibles support (coming soon)
+- 🖼️ NFT/Collectibles support
 - 🌙 Dark mode by default
 - 📱 Responsive design
 
 ## Prerequisites
 
 - Node.js >= 18.0.0
-- A Dune API key
+- A Sim API key
 
 ## Getting Started
 
@@ -36,18 +36,21 @@ To read the full guide, visit [https://docs.sim.dune.com/evm/wallet-ui](https://
    # Copy the template file
    cp .env.template .env
    
-   # Open .env in your preferred editor and add your Dune API key
-   # Replace 'your_api_key_here' with your actual Dune API key
+   # Open .env in your preferred editor and add your Sim API key
+   # Replace 'your_api_key_here' with your actual Sim API key
    ```
 
 ## Project Structure
 
 ```
 wallet-ui/
-├── index.ejs          # Main HTML template
-├── styles/
-│   └── main.css       # Styles and theme variables
-├── js/
-│   └── main.js        # JavaScript functionality
-└── README.md          # Documentation
+├── server.js             # Main application file with Express server
+├── views/                # Directory for EJS templates
+│   └── wallet.ejs        # Main wallet UI template
+├── public/               # Directory for static assets
+│   └── styles.css        # CSS styling for the wallet UI
+├── package.json          # Project configuration
+├── package-lock.json     # Dependency lock file (if `npm install` was run)
+├── node_modules/         # Installed packages (if `npm install` was run)
+└── .env                  # Your environment variables
 ```

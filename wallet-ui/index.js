@@ -15,13 +15,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // --- Configuration ---
-const DUNE_API_KEY = process.env.DUNE_API_KEY;
+const SIM_API_KEY = process.env.SIM_API_KEY;
 const DUNE_API_BASE_URL = 'https://api.dune.com/api';
 const DEFAULT_CHAIN_IDS = 'all'; // Ethereum, Polygon, Base, Arbitrum, Optimism
 const DEFAULT_ACTIVITY_LIMIT = 20; // Number of activities per page
 
-if (!DUNE_API_KEY) {
-    console.error("FATAL ERROR: DUNE_API_KEY is not set in your environment variables.");
+if (!SIM_API_KEY) {
+    console.error("FATAL ERROR: SIM_API_KEY is not set in your environment variables.");
     process.exit(1);
 }
 
@@ -44,7 +44,7 @@ async function callSimApi(endpoint, params = {}) {
     const response = await fetch(url, {
         method: 'GET',
         headers: {
-            'X-Dune-Api-Key': DUNE_API_KEY,
+            'X-Sim-Api-Key': SIM_API_KEY,
             'Content-Type': 'application/json'
         }
     });
