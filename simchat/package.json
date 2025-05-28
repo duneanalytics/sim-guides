@@ -1,0 +1,25 @@
+{
+  "name": "sim-apis-chatbot",
+  "version": "1.0.0",
+  "description": "A chatbot that uses Dune's Sim APIs with OpenAI function calling",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "openai": "^4.20.1"
+  },
+  "keywords": [
+    "blockchain",
+    "chatbot",
+    "openai",
+    "sim-apis",
+    "dune"
+  ],
+  "author": "",
+  "license": "MIT"
+}

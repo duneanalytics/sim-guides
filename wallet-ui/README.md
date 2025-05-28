@@ -4,7 +4,7 @@ A modern, accessible, and responsive wallet interface for viewing crypto assets 
 
 To read the full guide, visit [https://docs.sim.dune.com/evm/build-a-realtime-wallet](https://docs.sim.dune.com/evm/build-a-realtime-wallet).
 
-![Sim Realtime Wallet UI](images/ui.png)
+![Sim Realtime Wallet UI](images/ui.webp)
 
 ## Features
 

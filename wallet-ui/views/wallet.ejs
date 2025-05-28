@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sim APIs Wallet UI - A simple and elegant wallet interface for viewing crypto assets and transactions">
+    <meta name="theme-color" content="#0b0e1f">
+    <title>Sim APIs Wallet UI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="mobile-container">
+    <header class="app-header">
+        <div class="profile-pic-placeholder"></div>
+        <div class="header-title">Wallet</div>
+        <div class="settings-icon"></div>
+    </header>
+
+    <section class="total-balance-section">
+        <p class="total-balance-amount"><%= totalWalletUSDValue %></p>
+        <p class="total-balance-label js-wallet-address-display"><%= walletAddress || 'Enter wallet address...' %></p>
+    </section>
+
+    <nav class="tabs">
+        <button class="tab-button <%= currentTab === 'tokens' ? 'active' : '' %>" data-tab="tokens">Tokens</button>
+        <button class="tab-button <%= currentTab === 'activity' ? 'active' : '' %>" data-tab="activity">Activity</button>
+        <button class="tab-button <%= currentTab === 'collectibles' ? 'active' : '' %>" data-tab="collectibles">Collectibles</button>
+    </nav>
+
+    <main class="tab-content">
+        <!-- Tokens Tab Pane -->
+        <div id="tokens" class="tab-pane <%= currentTab === 'tokens' ? 'active' : '' %>">
+            <% if (tokens && tokens.length > 0) { %>
+                <% tokens.forEach(token => { %>
+                    <div class="list-item">
+                        <% if (token.token_metadata && token.token_metadata.logo) { %>
+                            <img src="<%= token.token_metadata.logo %>" alt="<%= token.symbol || 'Token' %> Logo" class="item-icon-placeholder" style="object-fit: contain; padding: 6px;">
+                        <% } else { %>
+                            <div class="item-icon-placeholder"><%= token.symbol ? token.symbol.substring(0, 4) : '?' %></div>
+                        <% } %>
+                        <div class="item-info">
+                            <% if (token.token_metadata && token.token_metadata.url) { %>
+                                <p class="item-name"><a href="<%= token.token_metadata.url %>" target="_blank" style="color: inherit; text-decoration: none;"><%= token.name || token.symbol %></a></p>
+                            <% } else { %>
+                                <p class="item-name"><%= token.name || token.symbol %></p>
+                            <% } %>
+                        </div>
+                        <div class="item-value-right">
+                            <p class="item-usd-value">
+                                <strong>
+                                    <%= token.valueUSDFormatted || (token.value_usd != null ? token.value_usd : 'N/A') %>
+                                </strong>
+                            </p>
+                            <p class="item-sub-info">
+                                <%= token.amountFormatted || token.amount %> <%= token.symbol %>
+                            </p>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else if (walletAddress) { %>
+                <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">No tokens found for this wallet.</p>
+            <% } else { %>
+                <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">Enter a wallet address above to see token balances.</p>
+            <% } %>
+        </div>
+
+       <!-- Activity Tab Pane (for Guide 2) -->
+       <div id="activity" class="tab-pane <%= currentTab === 'activity' ? 'active' : '' %>">
+        <% if (activities && activities.length > 0) { %>
+            <% activities.forEach(activity => { %>
+                <div class="list-item">
+                    <div class="item-icon-placeholder">
+                        <% if (activity.type === 'receive') { %>
+                            ↓
+                        <% } else if (activity.type === 'send') { %>
+                            ↑
+                        <% } else if (activity.type === 'call') { %>
+                            ⇆ <!-- Icon for contract call -->
+                        <% } else { %>
+                            ✓ <!-- Generic icon for other types -->
+                        <% } %>
+                    </div>
+                    <div class="item-info">
+                        <% 
+                            let activityTitle = activity.type.charAt(0).toUpperCase() + activity.type.slice(1);
+                            let activityColorClass = activity.type; // Used for potential CSS styling
+    
+                            if (activity.type === 'call' && activity.function && activity.function.name) {
+                                activityTitle = `Call: ${activity.function.name}`;
+                                activityColorClass = 'call';
+                            } else if (activity.type === 'receive' || activity.type === 'send') {
+                                const tokenSymbol = activity.token_metadata?.symbol || 
+                                                    (activity.asset_type === 'native' ? 
+                                                        (activity.chain_id === 1 || activity.chain_id === 8453 || activity.chain_id === 10 ? 'ETH' : 'Native') : 
+                                                        'Token');
+                                activityTitle = `${activity.type === 'receive' ? 'Received' : 'Sent'} ${tokenSymbol}`;
+                            }
+                        %>
+                        <p class="item-name activity-direction <%= activityColorClass %>"><%= activityTitle %></p>
+                        
+                        <p class="activity-address">
+                            <% 
+                                let partyLabel = '', partyAddress = '';
+                                if (activity.type === 'receive') { 
+                                    partyLabel = 'From'; 
+                                    partyAddress = activity.from; 
+                                } else if (activity.type === 'send') { 
+                                    partyLabel = 'To'; 
+                                    partyAddress = activity.to; 
+                                } else if (activity.type === 'call') { 
+                                    partyLabel = 'Contract'; 
+                                    partyAddress = activity.to; 
+                                } else { 
+                                    partyLabel = 'With'; 
+                                    partyAddress = activity.to || activity.from || 'Unknown'; 
+                                }
+                            %>
+                            
+                            <% if (partyAddress && partyAddress !== 'Unknown') { %>
+                                <%= partyLabel %> 
+                                <span class="mono">
+                                    <%= partyAddress.substring(0, 6) %>...<%= partyAddress.substring(partyAddress.length - 4) %>
+                                </span>
+                            <% } else { %>
+                                Interaction
+                            <% } %>
+                        </p>
+                        
+                        <p class="activity-timestamp">
+                            <span class="mono"><%= new Date(activity.block_time).toLocaleDateString(); %></span>
+                        </p>
+                    </div>
+                    <div class="item-value-right">
+                        <% if (activity.type === 'call') { %>
+                            <p class="activity-amount-right <%= activityColorClass %>" style="font-family: var(--font-primary);">
+                               Interaction
+                            </p>
+                        <% } else if (activity.value) { %>
+                            <p class="activity-amount-right <%= activityColorClass %>">
+                                <%
+                                let amountDisplay = '0';
+                                const decimals = typeof activity.token_metadata?.decimals === 'number' ? activity.token_metadata.decimals : 18;
+                                if (decimals !== null) {
+                                    const valueStr = activity.value.toString();
+                                    const padded = valueStr.padStart(decimals + 1, '0');
+                                    let intPart = padded.slice(0, -decimals);
+                                    let fracPart = padded.slice(-decimals).replace(/0+$/, '');
+                                    if (!intPart) intPart = '0';
+                                    if (fracPart) {
+                                        amountDisplay = `${intPart}.${fracPart}`;
+                                    } else {
+                                        amountDisplay = intPart;
+                                    }
+                                    const amountNum = parseFloat(amountDisplay);
+                                    if (amountNum > 0 && amountNum < 0.0001) {
+                                        amountDisplay = '<0.0001';
+                                    }
+                                    if (amountNum > 1e12 || amountDisplay.length > 12) {
+                                        amountDisplay = amountNum.toExponential(2);
+                                    }
+                                } else {
+                                    amountDisplay = activity.id || String(activity.value);
+                                }
+                                // Clean up the symbol: remove $ and anything after space/dash/bracket, and limit length
+                                let symbol = activity.token_metadata?.symbol || (activity.asset_type === 'native'
+                                    ? (activity.chain_id === 1 || activity.chain_id === 8453 || activity.chain_id === 10 ? 'ETH' : 'NTV')
+                                    : (activity.id ? '' : 'Tokens'));
+                                if (symbol) {
+                                    symbol = symbol.replace('$', '').split(/[\s\-\[]/)[0].substring(0, 8);
+                                }
+                                %>
+                                <% if (activity.type === 'receive') { %>+<% } else if (activity.type === 'send') { %>-<% } %><%= amountDisplay %> <span class="mono"><%= symbol %></span>
+                            </p>
+                        <% } %>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else if (walletAddress) { %>
+            <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">No activity found for this wallet.</p>
+        <% } else { %>
+            <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">Enter a wallet address to see activity.</p>
+        <% } %>
+    </div>
+
+        <!-- Collectibles Tab Pane (for Guide 3) -->
+        <div id="collectibles" class="tab-pane <%= currentTab === 'collectibles' ? 'active' : '' %>">
+            <p style="font-family: var(--font-primary); text-align: center; padding-top: 30px; color: var(--color-text-muted);">Collectibles feature will be added in a future guide.</p>
+        </div>
+    </main>
+</div>
+
+<script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const walletAddressDisplay = document.querySelector(".js-wallet-address-display");
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.dataset.tab;
+            const currentWalletAddress = new URLSearchParams(window.location.search).get('walletAddress');
+            if (currentWalletAddress) {
+                window.location.search = `?walletAddress=${currentWalletAddress}&tab=${tab}`;
+            } else {
+                // If no wallet address, just switch tab visually without reload, or prompt
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(tab).classList.add('active');
+            }
+        });
+    });
+
+    walletAddressDisplay.addEventListener('click', () => {
+        let newWalletAddress = prompt("Enter wallet address:", new URLSearchParams(window.location.search).get('walletAddress') || '');
+        if (newWalletAddress !== null && newWalletAddress.trim() !== "") {
+             const currentTab = new URLSearchParams(window.location.search).get('tab') || 'tokens';
+             window.location.search = `?walletAddress=${newWalletAddress.trim()}&tab=${currentTab}`;
+        } else if (newWalletAddress !== null) { // Empty input, clear address
+             const currentTab = new URLSearchParams(window.location.search).get('tab') || 'tokens';
+             window.location.search = `?tab=${currentTab}`;
+        }
+    });
+
+    // Set active tab based on URL param on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab') || 'tokens';
+        
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+
+        const activeButton = document.querySelector(`.tab-button[data-tab="${tab}"]`);
+        const activePane = document.getElementById(tab);
+
+        if (activeButton) activeButton.classList.add('active');
+        if (activePane) activePane.classList.add('active');
+    });
+</script>
+</body>
+</html>

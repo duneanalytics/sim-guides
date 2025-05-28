@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim APIs Chat</title>
+    <style>
+        :root {
+            --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --color-bg-deep: #e0e0e0; /* Light gray page background */
+            --color-text-primary: #333333;
+            --color-text-secondary: #555555;
+            --color-bg-container: #ffffff;
+            --color-user-message-bg: #222222; /* Black for user messages */
+            --color-user-message-text: #ffffff;
+            --color-system-message-bg: #f1f1f1; /* Light gray for system messages */
+            --color-system-message-text: #333333;
+            --color-input-border: #dddddd;
+            --color-send-button-bg: #8a8a8a;
+            --color-send-button-icon: #ffffff;
+            --color-plus-button-border: #e0e0e0;
+            --color-plus-button-text: #555555;
+            --border-radius-bubble: 18px;
+            --border-radius-container: 20px;
+            --border-radius-input: 10px;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--color-bg-deep);
+            color: var(--color-text-secondary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 0;
+            padding-bottom: 0;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            height: 90vh;
+            max-height: 800px;
+            min-height: 600px;
+            background-color: var(--color-bg-container);
+            border-radius: var(--border-radius-container);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            align-self: center;
+            box-shadow: 0 8px 32px rgba(20, 24, 41, 0.18), 0 1.5px 6px rgba(20, 24, 41, 0.10);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--color-input-border);
+            background-color: var(--color-bg-container); /* Ensure it's on top */
+            z-index: 10;
+        }
+
+        .avatar-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: var(--color-text-primary);
+            font-size: 1rem;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+        }
+
+        .add-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--color-plus-button-border);
+            background-color: var(--color-bg-container);
+            color: var(--color-plus-button-text);
+            font-size: 1.5rem;
+            line-height: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .add-button:hover {
+            background-color: #f9f9f9;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: var(--border-radius-bubble);
+            max-width: 75%;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: var(--color-user-message-bg);
+            color: var(--color-user-message-text);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px; /* To match the image's style */
+        }
+
+        .system-message {
+            background-color: var(--color-system-message-bg);
+            color: var(--color-system-message-text);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px; /* To match the image's style */
+        }
+        
+        .loading-dots {
+            display: flex;
+            align-items: center;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            margin: 0 2px;
+            background-color: var(--color-system-message-text);
+            opacity: 0.6;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px 20px;
+            border-top: 1px solid var(--color-input-border);
+            background-color: var(--color-bg-container); /* Ensure it's on top */
+            gap: 10px;
+        }
+
+        #messageInput {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--color-input-border);
+            border-radius: var(--border-radius-input);
+            font-size: 0.9rem;
+            outline: none;
+        }
+        #messageInput:focus {
+            border-color: #a0a0a0;
+        }
+
+        #sendButton {
+            background-color: var(--color-send-button-bg);
+            color: var(--color-send-button-icon);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: var(--border-radius-input);
+            font-size: 1.5rem; /* Larger for the icon */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #sendButton:hover {
+            background-color: #757575;
+        }
+
+        #sendButton:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+            padding: 10px 15px;
+            border-radius: var(--border-radius-bubble);
+            align-self: flex-start;
+            max-width: 75%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <div class="chat-header">
+            <div class="avatar-info">
+                <svg xmlns="http://www.w3.org/2000/svg" height="2rem" viewBox="0 0 95 40" fill="none"><path d="M19.9892 39.9686C31.0277 39.9686 39.9762 31.0213 39.9762 19.9843C39.9762 8.94728 31.0277 0 19.9892 0C8.95059 0 0.0020752 8.94728 0.0020752 19.9843C0.0020752 31.0213 8.95059 39.9686 19.9892 39.9686Z" fill="#F4603E"></path><path d="M3.47949 31.257C3.47949 31.257 16.6871 26.9308 39.9651 19.3408C39.9651 19.3408 41.2401 31.7705 28.3541 38.2539C28.3541 38.2539 21.9997 41.2994 15.0284 39.3458C15.0284 39.3458 8.08667 38.0355 3.47949 31.257Z" fill="#1E1870"></path><path d="M58.8644 30.006C57.2803 30.006 55.9338 29.7244 54.825 29.1611C53.7337 28.5979 52.792 27.8587 52 26.9434L54.3497 24.6729C54.9834 25.4121 55.6874 25.9754 56.4619 26.3626C57.2539 26.7498 58.1251 26.9434 59.0756 26.9434C60.1493 26.9434 60.9589 26.7146 61.5045 26.257C62.0502 25.7818 62.323 25.1481 62.323 24.3561C62.323 23.74 62.147 23.2384 61.795 22.8512C61.4429 22.464 60.7829 22.1823 59.8148 22.0063L58.0723 21.7423C54.3937 21.1615 52.5544 19.375 52.5544 16.3828C52.5544 15.5556 52.704 14.8075 53.0033 14.1387C53.3201 13.4699 53.7689 12.8978 54.3497 12.4226C54.9306 11.9474 55.6258 11.5865 56.4355 11.3401C57.2627 11.0761 58.1956 10.9441 59.234 10.9441C60.6245 10.9441 61.839 11.1729 62.8774 11.6305C63.9159 12.0882 64.8047 12.7658 65.544 13.6635L63.1678 15.9076C62.7102 15.3444 62.1558 14.8867 61.5045 14.5347C60.8533 14.1827 60.0349 14.0067 59.0492 14.0067C58.0459 14.0067 57.2891 14.2003 56.7787 14.5875C56.2858 14.9571 56.0394 15.4852 56.0394 16.1716C56.0394 16.8756 56.2418 17.3949 56.6467 17.7293C57.0515 18.0637 57.7027 18.3101 58.6004 18.4685L60.3165 18.7854C62.1822 19.1198 63.5551 19.7182 64.4351 20.5807C65.3328 21.4255 65.7816 22.6136 65.7816 24.1449C65.7816 25.0249 65.6232 25.8258 65.3064 26.5474C65.0071 27.2514 64.5583 27.8675 63.9599 28.3955C63.379 28.9059 62.6574 29.302 61.795 29.5836C60.9501 29.8652 59.9733 30.006 58.8644 30.006Z" fill="var(--color-text-primary)"></path><path d="M70.2257 13.9011C69.5217 13.9011 69.0112 13.7427 68.6944 13.4258C68.3952 13.109 68.2456 12.7042 68.2456 12.2114V11.6833C68.2456 11.1905 68.3952 10.7857 68.6944 10.4689C69.0112 10.1521 69.5217 9.99365 70.2257 9.99365C70.9121 9.99365 71.4138 10.1521 71.7306 10.4689C72.0474 10.7857 72.2058 11.1905 72.2058 11.6833V12.2114C72.2058 12.7042 72.0474 13.109 71.7306 13.4258C71.4138 13.7427 70.9121 13.9011 70.2257 13.9011ZM68.536 15.9076H71.9154V29.6892H68.536V15.9076Z" fill="var(--color-text-primary)"></path><path d="M75.3045 29.6892V15.9076H78.6839V18.2045H78.8159C79.0799 17.4829 79.5023 16.8668 80.0832 16.3564C80.664 15.846 81.4736 15.5908 82.5121 15.5908C83.4625 15.5908 84.281 15.8196 84.9674 16.2772C85.6539 16.7348 86.1643 17.4301 86.4987 18.3629H86.5515C86.7979 17.5885 87.282 16.9372 88.0036 16.4092C88.7428 15.8636 89.6669 15.5908 90.7758 15.5908C92.131 15.5908 93.1695 16.0572 93.8911 16.9901C94.6304 17.9229 95 19.2518 95 20.9767V29.6892H91.6206V21.3199C91.6206 19.3486 90.8814 18.3629 89.4029 18.3629C89.0685 18.3629 88.7428 18.4157 88.426 18.5213C88.1268 18.6093 87.854 18.7502 87.6076 18.9438C87.3788 19.1198 87.194 19.3486 87.0532 19.6302C86.9123 19.8942 86.8419 20.211 86.8419 20.5807V29.6892H83.4625V21.3199C83.4625 19.3486 82.7233 18.3629 81.2448 18.3629C80.928 18.3629 80.6112 18.4157 80.2944 18.5213C79.9951 18.6093 79.7223 18.7502 79.4759 18.9438C79.2471 19.1198 79.0535 19.3486 78.8951 19.6302C78.7543 19.8942 78.6839 20.211 78.6839 20.5807V29.6892H75.3045Z" fill="var(--color-text-primary)"></path></svg>
+            </div>
+            <button class="add-button" aria-label="Clear chat" onclick="clearChat()"><svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M27.1 14.313V5.396L24.158 8.34c-2.33-2.325-5.033-3.503-8.11-3.503C9.902 4.837 4.901 9.847 4.899 16c.001 6.152 5.003 11.158 11.15 11.16 4.276 0 9.369-2.227 10.836-8.478l.028-.122h-3.23l-.022.068c-1.078 3.242-4.138 5.421-7.613 5.421a8 8 0 0 1-5.691-2.359A7.993 7.993 0 0 1 8 16.001c0-4.438 3.611-8.049 8.05-8.049 2.069 0 3.638.58 5.924 2.573l-3.792 3.789H27.1z"/></svg></button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be added here by JavaScript -->
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Ask about wallet balances, transactions, NFTs, or token info...">
+            <button id="sendButton" aria-label="Send message">➤</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <script>
+        const chatMessagesContainer = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Session management
+        let sessionId = null;
+
+        function addMessage(text, sender, isHtml = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(sender === 'user' ? 'user-message' : 'system-message');
+            
+            if (isHtml) {
+                messageElement.innerHTML = text;
+            } else if (sender === 'system') {
+                // Parse markdown and sanitize for system messages
+                const html = marked.parse(text);
+                messageElement.innerHTML = DOMPurify.sanitize(html);
+            } else {
+                messageElement.textContent = text;
+            }
+            
+            chatMessagesContainer.appendChild(messageElement);
+            scrollToBottom();
+            return messageElement;
+        }
+
+        function addErrorMessage(text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('error-message');
+            messageElement.textContent = text;
+            chatMessagesContainer.appendChild(messageElement);
+            scrollToBottom();
+            return messageElement;
+        }
+
+        function scrollToBottom() {
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        function showLoadingIndicator() {
+            const loadingHtml = `
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            return addMessage(loadingHtml, 'system', true);
+        }
+
+        function clearChat() {
+            chatMessagesContainer.innerHTML = '';
+            sessionId = null; // Reset session
+            loadInitialMessages();
+        }
+
+        async function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (messageText === '') return;
+
+            // Disable input and button
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            // Add user message
+            addMessage(messageText, 'user');
+            messageInput.value = '';
+
+            // Show loading indicator
+            const loadingElement = showLoadingIndicator();
+
+            try {
+                // Prepare request body
+                const requestBody = { message: messageText };
+                if (sessionId) {
+                    requestBody.sessionId = sessionId;
+                }
+
+                // Send message to server
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                // Remove loading indicator
+                chatMessagesContainer.removeChild(loadingElement);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Server error');
+                }
+
+                const data = await response.json();
+                
+                // Store session ID for future requests
+                if (data.sessionId) {
+                    sessionId = data.sessionId;
+                }
+                
+                // Add assistant response
+                if (data.message) {
+                    addMessage(data.message, 'system');
+                } else {
+                    addErrorMessage('No response received from the assistant.');
+                }
+
+            } catch (error) {
+                // Remove loading indicator if it still exists
+                if (loadingElement.parentNode) {
+                    chatMessagesContainer.removeChild(loadingElement);
+                }
+                
+                console.error('Error sending message:', error);
+                addErrorMessage(`Error: ${error.message}`);
+            } finally {
+                // Re-enable input and button
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        function handleSendMessage() {
+            sendMessage();
+        }
+
+        sendButton.addEventListener('click', handleSendMessage);
+        messageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !messageInput.disabled) {
+                handleSendMessage();
+            }
+        });
+
+        // Initial messages
+        function loadInitialMessages() {
+            addMessage("Hi! I'm your Sim APIs assistant. I can help you explore blockchain data across 60+ EVM chains and Solana (SVM).", "system");
+            setTimeout(() => {
+                addMessage("Try asking me about:", "system");
+            }, 500);
+            setTimeout(() => {
+                addMessage(`Here are some things you can try:\n\n- Token balances for any **EVM** or **Solana** wallet address\n- Transaction history and activity (**EVM**)\n- NFT collections (**EVM**)\n- Token information and pricing (**EVM & Solana**)\n- Token holder distributions (**EVM**)\n- Solana token metadata\n- Solana SPL and native balances`, "system");
+            }, 1000);
+            setTimeout(() => {
+                addMessage("Just provide a wallet address like **0xd8da6bf26964af9d7eed9e03e53415d37aa96045** (EVM) or **DYw8jCTfwHNRJhhmFcbXvVDTqWMEVFBX6ZKUmG5CNSKK** (Solana), or ask about specific tokens!", "system");
+            }, 1500);
+        }
+
+        // Load initial messages when the page is ready
+        document.addEventListener('DOMContentLoaded', loadInitialMessages);
+    </script>
+
+</body>
+</html>

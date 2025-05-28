@@ -1,8 +1,8 @@
 :root {
     --font-primary: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
-
-    --color-bg-deep: #0b0e1f;
+    
+    --color-bg-deep: #e1e2f9;
     --color-bg-container: #141829;
     --color-border-primary: #2c3040;
     --color-border-secondary: #222636;
@@ -14,9 +14,9 @@
     --color-accent-purple: #7e87ef;
     --color-accent-red: #ff7875;
     --color-placeholder-bg: #3a3f58;
-}
-
-body {
+    }
+    
+    body {
     font-family: var(--font-primary);
     background-color: var(--color-bg-deep);
     color: var(--color-text-secondary);
@@ -24,89 +24,98 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     min-height: 100vh;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-.mobile-container {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 100vh;
+    }
+    
+    .mobile-container {
     width: 100%;
     max-width: 420px;
-    height: 85vh;
-    max-height: 700px;
+    height: 90vh;
+    max-height: 800px;
+    min-height: 600px;
     background-color: var(--color-bg-container);
     border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-}
-
-/* Header Styles */
-.app-header {
+    align-self: center;
+    box-shadow: 0 8px 32px rgba(20, 24, 41, 0.18), 0 1.5px 6px rgba(20, 24, 41, 0.10);
+    }
+    
+    /* Header Styles */
+    .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     border-bottom: 1px solid var(--color-border-primary);
     flex-shrink: 0;
-}
-
-.profile-pic-placeholder {
+    }
+    
+    .profile-pic-placeholder {
     width: 36px;
     height: 36px;
     background-color: var(--color-placeholder-bg);
     border-radius: 50%;
-}
-
-.header-title {
+    }
+    
+    .header-title {
     font-family: var(--font-primary);
     font-size: 1.4em;
     font-weight: 600; /* IBM Plex Sans SemiBold */
     color: var(--color-text-primary);
-}
-
-.settings-icon {
+    }
+    
+    .settings-icon {
     width: 22px;
     height: 22px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e0e0e0'%3E%3Cpath d='M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e0e0e0'%3E%3Cpath d='M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12-.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: contain;
     cursor: pointer;
     opacity: 0.8;
-}
-
-/* Total Balance Section */
-.total-balance-section {
+    }
+    
+    /* Total Balance Section */
+    .total-balance-section {
     padding: 25px 20px;
     text-align: center;
     border-bottom: 1px solid var(--color-border-primary);
     flex-shrink: 0;
-}
-
-.total-balance-amount {
+    }
+    
+    .total-balance-amount {
     font-family: var(--font-mono); /* Mono for large number */
     font-size: 2.3em;
     font-weight: 700;
     margin: 0;
     color: var(--color-accent-green);
-}
-.total-balance-label {
+    }
+    .total-balance-label {
     font-family: var(--font-primary);
     font-size: 0.85em;
     color: var(--color-text-muted);
     margin-top: 2px;
-}
-
-/* Tabs Section */
-.tabs {
+    cursor: pointer; /* Make it look clickable */
+    }
+    .total-balance-label:hover {
+        color: var(--color-text-primary);
+    }
+    
+    /* Tabs Section */
+    .tabs {
     display: flex;
     border-bottom: 1px solid var(--color-border-primary);
     flex-shrink: 0;
-}
-
-.tab-button {
+    position: relative;
+    z-index: 1;
+    }
+    
+    .tab-button {
     font-family: var(--font-primary);
     flex-grow: 1;
     padding: 14px;
@@ -119,33 +128,35 @@ body {
     font-weight: 500; /* IBM Plex Sans Medium */
     border-bottom: 3px solid transparent;
     transition: color 0.2s ease, border-bottom-color 0.2s ease;
-}
-.tab-button:hover {
+    }
+    .tab-button:hover {
     color: var(--color-text-primary);
-}
-.tab-button.active {
+    }
+    .tab-button.active {
     color: var(--color-text-primary);
     border-bottom: 3px solid var(--color-accent-purple);
-}
-
-.tab-content {
+    }
+    
+    .tab-content {
     padding: 0px 20px 20px 20px;
     flex-grow: 1;
+    min-height: 0;
+    max-height: calc(100vh - 220px);
     overflow-y: auto;
-}
-.tab-pane { display: none; }
-.tab-pane.active { display: block; }
-
-/* Tokens Tab & Activity Tab Styles */
-.list-item {
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    
+    /* Tokens Tab & Activity Tab Styles */
+    .list-item {
     display: flex;
     align-items: center;
     padding: 16px 0;
     border-bottom: 1px solid var(--color-border-secondary);
-}
-.list-item:last-child { border-bottom: none; }
-
-.item-icon-placeholder {
+    }
+    .list-item:last-child { border-bottom: none; }
+    
+    .item-icon-placeholder {
     width: 38px;
     height: 38px;
     background-color: #2c3040; /* Using a specific color, not var for contrast */
@@ -159,13 +170,14 @@ body {
     font-size: 0.9em;
     color: #c0c3d1; /* Using specific color */
     flex-shrink: 0;
-}
-
-.item-info {
+    overflow: hidden; /* Prevents text overflow if symbol is too long */
+    }
+    
+    .item-info {
     flex-grow: 1;
-    min-width: 0;
-}
-.item-name { /* Token Name, Activity Type like "Received", "Sent" */
+    min-width: 0; /* Prevents text overflow issues in flex children */
+    }
+    .item-name { /* Token Name, Activity Type like "Received", "Sent" */
     font-family: var(--font-primary);
     font-size: 1.05em;
     font-weight: 500; /* IBM Plex Sans Medium */
@@ -174,8 +186,8 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.item-sub-info { /* "1.2345 ETH on Ethereum", "Price: $800.00" */
+    }
+    .item-sub-info { /* "1.2345 ETH on Ethereum", "Price: $800.00" */
     font-family: var(--font-primary); /* Sans for descriptive part */
     font-size: 0.85em;
     color: var(--color-text-muted);
@@ -183,45 +195,149 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-.item-sub-info .mono { /* Span class for monospaced parts within sub-info */
+    }
+    .item-sub-info .mono { /* Span class for monospaced parts within sub-info */
     font-family: var(--font-mono);
-}
-
-.item-value-right {
+    }
+    
+    .item-value-right {
     text-align: right;
     flex-shrink: 0;
     padding-left: 10px;
-}
-.item-usd-value { /* USD value of holding */
+    }
+    .item-usd-value { /* USD value of holding */
     font-family: var(--font-mono); /* Mono for numerical USD value */
     font-size: 1.05em;
     font-weight: 500;
     margin: 0 0 3px 0;
     color: var(--color-text-primary);
-}
-
-/* Activity Tab Specifics */
-.activity-direction { /* "Received ETH", "Sent USDC" */
+    }
+    
+    /* Activity Tab Specifics */
+    .activity-direction { /* "Received ETH", "Sent USDC" */
     font-family: var(--font-primary);
     font-size: 1.05em;
     font-weight: 500; /* IBM Plex Sans Medium */
     margin: 0 0 3px 0;
-}
- .activity-direction.sent { color: var(--color-accent-red); }
- .activity-direction.received { color: var(--color-accent-green); }
-
-.activity-address, .activity-timestamp {
+    }
+    .activity-direction.sent { color: var(--color-accent-red); }
+    .activity-direction.receive { color: var(--color-accent-green); } /* Ensure class name consistency with JS */
+    
+    
+    .activity-address, .activity-timestamp {
     font-family: var(--font-primary); /* Sans for "From:", "To:" */
     font-size: 0.8em;
     color: var(--color-text-subtle);
     margin: 0;
-}
-.activity-address .mono, .activity-timestamp .mono { /* For address itself and timestamp value */
+    }
+    .activity-address .mono, .activity-timestamp .mono { /* For address itself and timestamp value */
      font-family: var(--font-mono);
-}
- .activity-amount-right { /* "+0.5 ETH" */
+    }
+    .activity-amount-right { /* "+0.5 ETH" */
     font-family: var(--font-mono); /* Mono for amount + symbol */
     font-size: 1.05em;
     font-weight: 500;
- }
+    }
+    .activity-amount-right.sent { color: var(--color-accent-red); }
+    .activity-amount-right.receive { color: var(--color-accent-green); }
+    
+    /* NFT Grid Container */
+    .collectibles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        padding-top: 20px;
+        width: 100%;
+    }
+    
+    /* NFT Item Container */
+    .collectible-item-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        transition: transform 0.2s ease;
+    }
+    
+    .collectible-item-link:hover {
+        transform: translateY(-5px);
+    }
+    
+    .collectible-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgb(var(--gray-100));
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Image Container */
+    .collectible-image-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%; /* Creates a square aspect ratio */
+    }
+    
+    .collectible-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Image Placeholder */
+    .collectible-image-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgb(var(--gray-200));
+        color: rgb(var(--gray-500));
+        font-size: 0.875rem;
+    }
+    
+    /* NFT Info Container */
+    .collectible-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .collectible-item-link:hover .collectible-info {
+        opacity: 1;
+    }
+    
+    /* NFT Text Styles */
+    .collectible-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .collectible-collection {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+        opacity: 0.9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .collectible-chain {
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
