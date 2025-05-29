@@ -244,8 +244,8 @@
     /* NFT Grid Container */
     .collectibles-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1rem;
         padding-top: 20px;
         width: 100%;
     }
@@ -259,15 +259,16 @@
     }
     
     .collectible-item-link:hover {
-        transform: translateY(-5px);
+        transform: translateY(-2px);
     }
     
     .collectible-item {
         position: relative;
         border-radius: 12px;
         overflow: hidden;
-        background: rgb(var(--gray-100));
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background: var(--color-bg-container);
+        border: 1px solid var(--color-border-secondary);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     /* Image Container */
@@ -275,6 +276,7 @@
         position: relative;
         width: 100%;
         padding-bottom: 100%; /* Creates a square aspect ratio */
+        background: var(--color-placeholder-bg);
     }
     
     .collectible-image {
@@ -296,19 +298,28 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgb(var(--gray-200));
-        color: rgb(var(--gray-500));
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-family: var(--font-primary);
+        font-weight: 600;
         font-size: 0.875rem;
     }
     
-    /* NFT Info Container */
+    /* NFT Info Container - Static (always visible) */
+    .collectible-info-static {
+        padding: 0.75rem;
+        background: var(--color-bg-container);
+        border-top: 1px solid var(--color-border-secondary);
+    }
+    
+    /* NFT Info Container - Hover (keep for backwards compatibility but not used) */
     .collectible-info {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        padding: 1rem;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 0.75rem;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
         color: white;
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -320,24 +331,30 @@
     
     /* NFT Text Styles */
     .collectible-name {
-        font-size: 1.125rem;
+        font-family: var(--font-primary);
+        font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: var(--color-text-primary);
     }
     
     .collectible-collection {
-        font-size: 0.875rem;
-        margin-bottom: 0.25rem;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        margin-bottom: 0;
         opacity: 0.9;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: var(--color-text-muted);
     }
     
     .collectible-chain {
-        font-size: 0.75rem;
+        font-family: var(--font-primary);
+        font-size: 0.7rem;
         opacity: 0.8;
+        color: white;
     }

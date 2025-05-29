@@ -187,7 +187,45 @@
 
         <!-- Collectibles Tab Pane (for Guide 3) -->
         <div id="collectibles" class="tab-pane <%= currentTab === 'collectibles' ? 'active' : '' %>">
-            <p style="font-family: var(--font-primary); text-align: center; padding-top: 30px; color: var(--color-text-muted);">Collectibles feature will be added in a future guide.</p>
+            <% if (collectibles && collectibles.length > 0) { %>
+                <div class="collectibles-grid">
+                    <% collectibles.forEach(collectible => { %>
+                        <% if (collectible.opensea_url) { %>
+                            <a href="<%= collectible.opensea_url %>" target="_blank" class="collectible-item-link">
+                        <% } else { %>
+                            <div class="collectible-item-link">
+                        <% } %>
+                            <div class="collectible-item">
+                                <div class="collectible-image-container">
+                                    <% if (collectible.image_url) { %>
+                                        <img src="<%= collectible.image_url %>" alt="<%= collectible.collection_name || collectible.name || 'NFT' %>" class="collectible-image">
+                                    <% } else { %>
+                                        <div class="collectible-image-placeholder">
+                                            NFT
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="collectible-info-static">
+                                    <div class="collectible-name">
+                                        <%= collectible.collection_name || collectible.name || `Token #${collectible.token_id}` %>
+                                    </div>
+                                    <div class="collectible-collection">
+                                        #<%= collectible.token_id.length > 10 ? collectible.token_id.substring(0, 8) + '...' : collectible.token_id %>
+                                    </div>
+                                </div>
+                            </div>
+                        <% if (collectible.opensea_url) { %>
+                            </a>
+                        <% } else { %>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                </div>
+            <% } else if (walletAddress) { %>
+                <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">No collectibles found for this wallet.</p>
+            <% } else { %>
+                <p style="text-align: center; padding-top: 30px; color: var(--color-text-muted);">Enter a wallet address to see collectibles.</p>
+            <% } %>
         </div>
     </main>
 </div>

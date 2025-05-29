@@ -104,6 +104,85 @@ async function getWalletBalances(walletAddress) {
     }
 }
 
+async function getWalletCollectibles(walletAddress, limit = 50) {
+    if (!walletAddress) return [];
+
+    const url = `https://api.sim.dune.com/v1/evm/collectibles/${walletAddress}?limit=${limit}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'X-Sim-Api-Key': SIM_API_KEY,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            console.error(`Collectibles API request failed with status ${response.status}: ${response.statusText}`, errorBody);
+            throw new Error(`Collectibles API request failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const collectibles = data.entries || [];
+
+        // Enrich collectibles with OpenSea image data
+        const enrichedCollectibles = await Promise.all(
+            collectibles.map(async (collectible) => {
+                try {
+                    // Use the chain value directly from Sim APIs
+                    if (collectible.chain) {
+                        const openSeaUrl = `https://api.opensea.io/api/v2/chain/${collectible.chain}/contract/${collectible.contract_address}/nfts/${collectible.token_id}`;
+                        
+                        const openSeaResponse = await fetch(openSeaUrl, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'x-api-key': process.env.OPENSEA_API_KEY
+                            }
+                        });
+
+                        if (openSeaResponse.ok) {
+                            const openSeaData = await openSeaResponse.json();
+                            return {
+                                ...collectible,
+                                image_url: openSeaData.nft?.image_url || null,
+                                opensea_url: openSeaData.nft?.opensea_url || null,
+                                description: openSeaData.nft?.description || null,
+                                collection_name: openSeaData.nft?.collection || collectible.name
+                            };
+                        }
+                    }
+                    
+                    // Return original collectible if OpenSea fetch fails or no chain info
+                    return {
+                        ...collectible,
+                        image_url: null,
+                        opensea_url: null,
+                        description: null,
+                        collection_name: collectible.name
+                    };
+                } catch (error) {
+                    console.error(`Error fetching OpenSea data for ${collectible.chain}:${collectible.contract_address}:${collectible.token_id}:`, error.message);
+                    return {
+                        ...collectible,
+                        image_url: null,
+                        opensea_url: null,
+                        description: null,
+                        collection_name: collectible.name
+                    };
+                }
+            })
+        );
+
+        // Filter out collectibles without images
+        return enrichedCollectibles.filter(collectible => collectible.image_url !== null);
+
+    } catch (error) {
+        console.error("Error fetching wallet collectibles:", error.message);
+        return [];
+    }
+}
+
 // Add our home route
 app.get('/', async (req, res) => {
     const { 
@@ -120,9 +199,10 @@ app.get('/', async (req, res) => {
     if (walletAddress) {
         try {
 
-            [tokens, activities] = await Promise.all([
+            [tokens, activities, collectibles] = await Promise.all([
                 getWalletBalances(walletAddress),
-                getWalletActivity(walletAddress, 25) // Fetching 25 recent activities
+                getWalletActivity(walletAddress, 25), // Fetching 25 recent activities
+                getWalletCollectibles(walletAddress, 50) // Fetching 50 collectibles
             ]);
 
             // Calculate the total USD value from the fetched tokens
@@ -150,12 +230,13 @@ app.get('/', async (req, res) => {
         totalWalletUSDValue: totalWalletUSDValue, // We'll calculate this in the next section
         tokens: tokens,
         activities: activities, // Placeholder for Guide 2
-        collectibles: [], // Placeholder for Guide 3
+        collectibles: collectibles, // Now populated with actual data
         errorMessage: errorMessage
     });
 });
 
-// Start the server
-app.listen(3001, () => {
-    console.log(`Server running at http://localhost:3001`);
-});
+// app.listen(3001, () => {
+//     console.log('Server is running on port 3001');
+// });
+
+export default app;
