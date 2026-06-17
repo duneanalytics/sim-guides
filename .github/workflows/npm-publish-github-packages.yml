@@ -1,0 +1,34 @@
+{
+  "wallet_address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+  "balances": [
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0e36c45d16585d1801e37cfaa577a9ad39f9343a",
+      "amount": "45787557175393926414790300082",
+      "symbol": "Kendu",
+      "name": "Kendu of Bank",
+      "decimals": 18,
+      "price_usd": 1.233346836175539e+21,
+      "value_usd": 5.647193877847869e+31,
+      "pool_size": 1233.34683617554,
+      "low_liquidity": true
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x113404d2003c4acf4231a3a62374bb503bff03d7",
+      "amount": "432599243131405501735524",
+      "symbol": "ALT",
+      "name": "AltLayer",
+      "decimals": 18,
+      "price_usd": 9388386012000030000,
+      "value_usd": 4.061408683016688e+24,
+      "pool_size": 9.38838601200001,
+      "low_liquidity": true
+    }
+  ],
+  "next_offset": "opaque-pagination-token",
+  "request_time": "2025-08-13T10:31:08Z",
+  "response_time": "2025-08-13T10:31:08Z"
+}
