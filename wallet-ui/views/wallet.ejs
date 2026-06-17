@@ -204,11 +204,7 @@
             <% if (collectibles && collectibles.length > 0) { %>
                 <div class="collectibles-grid">
                     <% collectibles.forEach(collectible => { %>
-                        <% if (collectible.opensea_url) { %>
-                            <a href="<%= collectible.opensea_url %>" target="_blank" class="collectible-item-link">
-                        <% } else { %>
-                            <div class="collectible-item-link">
-                        <% } %>
+                        <div class="collectible-item-link">
                             <div class="collectible-item">
                                 <div class="collectible-image-container">
                                     <% if (collectible.image_url) { %>
@@ -228,11 +224,7 @@
                                     </div>
                                 </div>
                             </div>
-                        <% if (collectible.opensea_url) { %>
-                            </a>
-                        <% } else { %>
-                            </div>
-                        <% } %>
+                        </div>
                     <% }); %>
                 </div>
             <% } else if (walletAddress) { %>

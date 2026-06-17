@@ -143,56 +143,14 @@ async function getWalletCollectibles(walletAddress, limit = 50) {
         const data = await response.json();
         const collectibles = data.entries || [];
 
-        // Enrich collectibles with OpenSea image data
-        const enrichedCollectibles = await Promise.all(
-            collectibles.map(async (collectible) => {
-                try {
-                    // Use the chain value directly from Sim APIs
-                    if (collectible.chain) {
-                        const openSeaUrl = `https://api.opensea.io/api/v2/chain/${collectible.chain}/contract/${collectible.contract_address}/nfts/${collectible.token_id}`;
-                        
-                        const openSeaResponse = await fetch(openSeaUrl, {
-                            headers: {
-                                'Accept': 'application/json',
-                                'x-api-key': process.env.OPENSEA_API_KEY
-                            }
-                        });
-
-                        if (openSeaResponse.ok) {
-                            const openSeaData = await openSeaResponse.json();
-                            return {
-                                ...collectible,
-                                image_url: openSeaData.nft?.image_url || null,
-                                opensea_url: openSeaData.nft?.opensea_url || null,
-                                description: openSeaData.nft?.description || null,
-                                collection_name: openSeaData.nft?.collection || collectible.name
-                            };
-                        }
-                    }
-                    
-                    // Return original collectible if OpenSea fetch fails or no chain info
-                    return {
-                        ...collectible,
-                        image_url: null,
-                        opensea_url: null,
-                        description: null,
-                        collection_name: collectible.name
-                    };
-                } catch (error) {
-                    console.error(`Error fetching OpenSea data for ${collectible.chain}:${collectible.contract_address}:${collectible.token_id}:`, error.message);
-                    return {
-                        ...collectible,
-                        image_url: null,
-                        opensea_url: null,
-                        description: null,
-                        collection_name: collectible.name
-                    };
-                }
-            })
-        );
-
-        // Filter out collectibles without images
-        return enrichedCollectibles.filter(collectible => collectible.image_url !== null);
+        // Use Sim APIs data directly - no need for external API calls
+        return collectibles.map(collectible => {
+            return {
+                ...collectible,
+                // Use collection_name field, fallback to name if not available
+                collection_name: collectible.name || `Token #${collectible.token_id}`
+            };
+        }).filter(collectible => collectible.image_url); // Only show collectibles with images
 
     } catch (error) {
         console.error("Error fetching wallet collectibles:", error.message);
