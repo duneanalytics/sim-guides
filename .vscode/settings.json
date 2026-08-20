@@ -1,0 +1,23 @@
+{
+    "workbench.startupEditor": "welcomePage",
+    "workbench.editor.limit.enabled": true,
+    "workbench.editor.defaultBinaryEditor": "gitlens.rebase",
+    "workbench.editor.autoLockGroups": {
+        "default": true,
+        "workbench.editor.chatSession": true,
+        "gitlens.rebase": true,
+        "jsProfileVisualizer.cpuprofile.table": true,
+        "hediet.vscode-drawio": true,
+        "workbench.editorinputs.searchEditorInput": true,
+        "workbench.editors.gettingStartedInput": true,
+        "imagePreview.previewEditor": true,
+        "hediet.vscode-drawio-text": true,
+        "mainThreadWebview-markdown.preview": true,
+        "workbench.input.interactive": true,
+        "jupyter-notebook": true
+    },
+    "workbench.editor.limit.perEditorGroup": true,
+    "workbench.settings.editor": "json",
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
+}

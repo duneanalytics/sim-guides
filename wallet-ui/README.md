@@ -24,25 +24,37 @@ To read the full guide, visit [https://docs.sim.dune.com/evm/build-a-realtime-wa
 
 1. Clone the repository
 2. Navigate to the wallet-ui directory:
-   ```bash
-   cd wallet-ui
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Set up your environment:
-   ```bash
-   # Copy the template file
-   cp .env.template .env
+
+```bash
+  cd wallet-u
+
+```
+
+3.Install dependencies:
+
+```bash
+  npm install
+  ```
+
+4.Set up your environment:
+
+```bash
    
-   # Open .env in your preferred editor and add your Sim API key
-   # Replace 'your_api_key_here' with your actual Sim API key
-   ```
+   # Copy the template file
+   cp.env.template .env
+   
+
+# Open .env in your preferred editor and add your Sim API key
+# Replace 'your_api_key_here' with your actual Sim API key
+```
 
 ## Project Structure
 
+``````bash
+#!/bin/bash
+echo Hello world
 ```
+
 wallet-ui/
 ├── server.js             # Main application file with Express server
 ├── views/                # Directory for EJS templates
